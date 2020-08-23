@@ -7,7 +7,8 @@ var params = {
     'startDate': '2018-01-01',
     'endDate': '2018-12-31',
     'geometry': ee.FeatureCollection("users/xiazilong123/important/aquaculture/Shanghai-border")
-};function maskS2clouds(image) {
+};
+function maskS2clouds(image) {
   var qa = image.select('QA60');
   var cloudBitMask = 1 << 10;
   var cirrusBitMask = 1 << 11;
@@ -35,7 +36,14 @@ var getPerimeter = function(image){
   var result=r1.add(r2).add(r3).add(r4);
   return result;
 };
-
+function maskS2clouds(image) {
+  var qa = image.select('QA60');
+  var cloudBitMask = 1 << 10;
+  var cirrusBitMask = 1 << 11;
+  var mask = qa.bitwiseAnd(cloudBitMask).eq(0)
+      .and(qa.bitwiseAnd(cirrusBitMask).eq(0));
+  return image.updateMask(mask).divide(10000);
+}
 var SentinelFunctions = {
   applyNDWI: function(image) {
     var ndwi = image.normalizedDifference(['green','nir']);
