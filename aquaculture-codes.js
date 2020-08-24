@@ -101,7 +101,8 @@ var objectPropertiesImage = ee.Image.cat([
       getIndex(0.25,NDWI),getIndex(0.3,NDWI),
 ]).float();
 var training = ee.FeatureCollection("users/xiazilong123/important/aquaculture/training");
-var classifier = ee.Classifier.randomForest(400).train(training, 'class');
+var bands = objectPropertiesImage.bandNames();
+var classifier = ee.Classifier.randomForest(400).train(training, 'class', bands)
 var classification = objectPropertiesImage.classify(classifier);  
 classification=classification.mask(NDWI.gt(0.1)).unmask(0).clip(params.geometry);
 
